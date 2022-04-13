@@ -28,4 +28,5 @@ const read = (req, res) => {
 module.exports = {
 	list: asyncErrorBoundary(list),
 	read: [asyncErrorBoundary(itemExists), read],
+	itemExists: asyncErrorBoundary(itemExists),
 }
