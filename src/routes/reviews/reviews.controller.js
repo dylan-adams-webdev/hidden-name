@@ -1,17 +1,9 @@
 const service = require('./reviews.service');
 const asyncErrorBoundary = require('../../errors/asyncErrorBoundary');
 
-const reduceReviewAndCritic = reduceProperties('review_id', {
-	theater_id: ['theater', 'theater_id'],
-	name: ['theater', 'name'],
-	movie_id: ['movies', null, 'movie_id'],
-	title: ['movies', null, 'title'],
-	rating: ['movies', null, 'rating'],
-});
-
 const itemExists = async (req, res, next) => {
 	const { reviewId } = req.params;
-	const review = await service.read(reviewId);
+	const review = await service.readReviews(reviewId);
 	if (review) {
 		res.locals.review = review;
 		return next();
@@ -19,15 +11,19 @@ const itemExists = async (req, res, next) => {
 	next({ status: 404, message: `review with id ${reviewId} does not exist` });
 };
 
-const update = async (req, res) => {
+const update = (req, res, next) => {
 	const { review } = res.locals;
 	const { data: { id, ...rest } = {} } = req.body;
-	const updatedReview = {
+	let updatedReview = {
 		...review,
 		...rest,
 	};
 	res.json({ data: updatedReview });
 };
+
+const concatCriticAndReview = async (req, res) => {
+	
+}
 
 module.exports = {
 	update: [asyncErrorBoundary(itemExists), asyncErrorBoundary(update)],
