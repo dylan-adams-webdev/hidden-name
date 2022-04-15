@@ -6,8 +6,16 @@ exports.up = function (knex) {
 		table.integer('critic_id');
 		table.integer('movie_id');
 		table.timestamps(true, true);
-		table.foreign('critic_id').references('critics.critic_id');
-		table.foreign('movie_id').references('movies.movie_id');
+		table
+			.foreign('critic_id')
+			.references('critic_id')
+			.inTable('critics')
+			.onDelete('cascade');
+		table
+			.foreign('movie_id')
+			.references('movie_id')
+			.inTable('movies')
+			.onDelete('cascade');
 	});
 };
 
